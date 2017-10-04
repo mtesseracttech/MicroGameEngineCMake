@@ -52,7 +52,6 @@ add_executable(MicroGameEngine
 #Sets a base path for the includes so that they can be used in the same way as in Visual Studio/Codeblocks
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
 include_directories("${BASEPATH}")
-message(STATUS ${BASEPATH})
 
 #Lets CMake search in {Project Directory}/cmake/modules for Find*.cmake files
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
@@ -64,12 +63,14 @@ if(SFML_FOUND)
         target_link_libraries(MicroGameEngine ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif (SFML_FOUND)
 
+
 #Finds and Links OpenGL
-find_package(OPENGL REQUIRED)
+find_package(OpenGL REQUIRED)
 if(OPENGL_FOUND)
         include_directories(${OPENGL_INCLUDE_DIR})
         target_link_libraries(MicroGameEngine ${OPENGL_LIBRARIES})
 endif(OPENGL_FOUND)
+
 
 #Finds and Links GLEW
 find_package(GLEW REQUIRED)
