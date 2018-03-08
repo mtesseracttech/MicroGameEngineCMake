@@ -1,6 +1,8 @@
 ## CMake based version of the MicroGameEngine (MGE)
 
-I wanted to make the engine build with CMake, so here it is.
+MGE is a barebones game engine written for the Game Technology course on Saxion University of Applied Sciences.
+
+I wanted to make the engine build using CMake, so here it is.
 
 Dependencies:
 -  SFML, used for context management, audio and texture loading (has some other nifty things too that are not utilized in the base engine)
