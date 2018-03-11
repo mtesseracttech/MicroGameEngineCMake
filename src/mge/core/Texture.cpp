@@ -4,60 +4,69 @@
 #include <SFML/Graphics.hpp>
 #include "mge/core/Texture.hpp"
 
-std::map<std::string, Texture*> Texture::_textures; // for static texturs var
+std::map<std::string, Texture*> Texture::m_textures; // for static texturs var
 
-Texture::Texture(): _id() {
-    glGenTextures (1, &_id);
+Texture::Texture() : m_id()
+{
+    glGenTextures(1, &m_id);
 }
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &_id);
+    glDeleteTextures(1, &m_id);
 }
 
-GLuint Texture::getId() {
-	return _id;
+GLuint Texture::getId()
+{
+    return m_id;
 }
 
 // importer for textures
-Texture* Texture::load(std::string pName)
+Texture* Texture::load(std::string p_texturePath)
 {
-    Texture* texture = 0;
+    Texture* texture = nullptr;
 
     //try to locate texture
-   	std::map<std::string, Texture*>::iterator textureIterator = _textures.find(pName);
+    auto textureIterator = m_textures.find(p_texturePath);
 
-   	if (textureIterator == _textures.end()) {
-        texture = _loadFromFile(pName);
-        std::cout << "Texture " << pName << " with id " << texture->getId() << " loaded." << std::endl;
+    if (textureIterator == m_textures.end())
+    {
+        texture = loadFromFile(p_texturePath);
+        std::cout << "Texture " << p_texturePath << " with id " << texture->getId() << " loaded." << std::endl;
         std::cout << "Caching texture." << std::endl;
-        _textures[pName] = texture;
-    } else {
-        std::cout << "Returning cached texture " << pName << std::endl;
+        m_textures[p_texturePath] = texture;
+    }
+    else
+    {
+        std::cout << "Returning cached texture " << p_texturePath << std::endl;
         texture = textureIterator->second;
     }
 
     return texture;
 }
 
-Texture* Texture::_loadFromFile(std::string pName) {
+Texture* Texture::loadFromFile(std::string p_texturePath)
+{
     // load from file and store in cache
     sf::Image image;
-    if (image.loadFromFile(pName))
+    if (image.loadFromFile(p_texturePath))
     {
         //normal image 0,0 is top left, but opengl uv 0,0 is bottom left, so we flip the image internally
         image.flipVertically();
         //create a wrapper for the id (texture is nothing more than that) and
         //load corresponding data into opengl using this id
-        Texture * texture = new Texture();
-        glBindTexture (GL_TEXTURE_2D, texture->getId());
-        glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        auto* texture = new Texture();
+        glBindTexture(GL_TEXTURE_2D, texture->getId());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     image.getPixelsPtr());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(GL_TEXTURE_2D, 0);
         return texture;
-    } else {
-        return 0;
+    }
+    else
+    {
+        return nullptr;
     }
 }
 

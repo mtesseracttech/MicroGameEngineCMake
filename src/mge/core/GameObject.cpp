@@ -1,133 +1,142 @@
 #include <cassert>
 #include <iostream>
-using namespace std;
 
 #include "mge/core/GameObject.hpp"
 #include "mge/core/Mesh.hpp"
 #include "mge/behaviours/AbstractBehaviour.hpp"
 
-GameObject::GameObject(std::string pName, glm::vec3 pPosition )
-:	_name( pName ), _transform( glm::translate( pPosition ) ),
-    _parent(NULL), _children(), _mesh( NULL ),_behaviour( NULL ), _material(NULL)
+GameObject::GameObject(std::string p_name, glm::vec3 p_position)
+        : m_name(p_name), m_transform(glm::translate(p_position)),
+          m_parent(nullptr), m_children(), m_mesh(nullptr), m_behaviour(nullptr), m_material(nullptr)
 {
 }
 
 GameObject::~GameObject()
 {
     //detach all children
-    cout << "GC running on:" << _name << endl;
+    std::cout << "GC running on:" << m_name << std::endl;
 
-    while (_children.size() > 0) {
-        GameObject* child = _children[0];
-        remove (child);
+    while (!m_children.empty())
+    {
+        GameObject* child = m_children[0];
+        remove(child);
         delete child;
     }
 
     //do not forget to delete behaviour, material, mesh, collider manually if required!
 }
 
-void GameObject::setName (std::string pName)
+void GameObject::setName(std::string p_name)
 {
-    _name = pName;
+    m_name = p_name;
 }
 
 std::string GameObject::getName() const
 {
-	return _name;
+    return m_name;
 }
 
-void GameObject::setTransform (const glm::mat4& pTransform)
+void GameObject::setTransform(const glm::mat4& p_transform)
 {
-    _transform = pTransform;
+    m_transform = p_transform;
 }
 
 const glm::mat4& GameObject::getTransform() const
 {
-    return _transform;
+    return m_transform;
 }
 
-void GameObject::setLocalPosition (glm::vec3 pPosition)
+void GameObject::setLocalPosition(glm::vec3 p_position)
 {
-    _transform[3] = glm::vec4 (pPosition,1);
+    m_transform[3] = glm::vec4(p_position, 1);
 }
 
 glm::vec3 GameObject::getLocalPosition() const
 {
-	return glm::vec3(_transform[3]);
+    return glm::vec3(m_transform[3]);
 }
 
-void GameObject::setMaterial(AbstractMaterial* pMaterial)
+void GameObject::setMaterial(AbstractMaterial* p_material)
 {
-    _material = pMaterial;
+    m_material = p_material;
 }
 
-AbstractMaterial * GameObject::getMaterial() const
+AbstractMaterial* GameObject::getMaterial() const
 {
-    return _material;
+    return m_material;
 }
 
-void GameObject::setMesh(Mesh* pMesh)
+void GameObject::setMesh(Mesh* p_mesh)
 {
-	_mesh = pMesh;
+    m_mesh = p_mesh;
 }
 
-Mesh * GameObject::getMesh() const
+Mesh* GameObject::getMesh() const
 {
-    return _mesh;
+    return m_mesh;
 }
 
-void GameObject::setBehaviour(AbstractBehaviour* pBehaviour)
+void GameObject::setBehaviour(AbstractBehaviour* p_behaviour)
 {
-	_behaviour = pBehaviour;
-	_behaviour->setOwner(this);
+    m_behaviour = p_behaviour;
+    m_behaviour->setOwner(this);
 }
 
-AbstractBehaviour * GameObject::getBehaviour() const
+AbstractBehaviour* GameObject::getBehaviour() const
 {
-    return _behaviour;
+    return m_behaviour;
 }
 
-void GameObject::setParent (GameObject* pParent) {
+void GameObject::setParent(GameObject* p_parent)
+{
     //remove from previous parent
-    if (_parent != NULL) {
-        _parent->_innerRemove(this);
-        _parent = NULL;
+    if (m_parent != nullptr)
+    {
+        m_parent->innerRemove(this);
+        m_parent = nullptr;
     }
 
     //set new parent
-    if (pParent != NULL) {
-        _parent = pParent;
-        _parent->_innerAdd(this);
+    if (p_parent != nullptr)
+    {
+        m_parent = p_parent;
+        m_parent->innerAdd(this);
     }
 }
 
-GameObject* GameObject::getParent() {
-    return _parent;
+GameObject* GameObject::getParent()
+{
+    return m_parent;
 }
 
-void GameObject::_innerAdd(GameObject* pChild)
+void GameObject::innerAdd(GameObject* p_child)
 {
     //set new parent
-    pChild->_parent = this;
-	_children.push_back(pChild);
+    p_child->m_parent = this;
+    m_children.push_back(p_child);
 }
 
-void GameObject::_innerRemove (GameObject* pChild) {
-    for (auto i = _children.begin(); i != _children.end(); ++i) {
-        if (*i == pChild) {
-            (*i)->_parent = NULL;
-            _children.erase(i);
+void GameObject::innerRemove(GameObject* p_child)
+{
+    for (auto i = m_children.begin(); i != m_children.end(); ++i)
+    {
+        if (*i == p_child)
+        {
+            (*i)->m_parent = nullptr;
+            m_children.erase(i);
             return;
         }
     }
 }
 
-void GameObject::add (GameObject* pChild) {
-    pChild->setParent(this);
+void GameObject::add(GameObject* p_child)
+{
+    p_child->setParent(this);
 }
 
-void GameObject::remove (GameObject* pChild) {
-    pChild->setParent(NULL);
+void GameObject::remove(GameObject* p_child)
+{
+    p_child->setParent(nullptr);
 }
 
 ////////////
@@ -135,48 +144,51 @@ void GameObject::remove (GameObject* pChild) {
 //costly operation, use with care
 glm::vec3 GameObject::getWorldPosition() const
 {
-	return glm::vec3(getWorldTransform()[3]);
+    return glm::vec3(getWorldTransform()[3]);
 }
 
 //costly operation, use with care
 glm::mat4 GameObject::getWorldTransform() const
 {
-    if (_parent == NULL) return _transform;
-    else return _parent->getWorldTransform() * _transform;
+    if (m_parent == nullptr) return m_transform;
+    else return m_parent->getWorldTransform() * m_transform;
 }
 
 ////////////
 
-void GameObject::translate(glm::vec3 pTranslation)
+void GameObject::translate(glm::vec3 p_translation)
 {
-	setTransform(glm::translate(_transform, pTranslation));
+    setTransform(glm::translate(m_transform, p_translation));
 }
 
-void GameObject::scale(glm::vec3 pScale)
+void GameObject::scale(glm::vec3 p_scale)
 {
-	setTransform(glm::scale(_transform, pScale));
+    setTransform(glm::scale(m_transform, p_scale));
 }
 
-void GameObject::rotate(float pAngle, glm::vec3 pAxis)
+void GameObject::rotate(float p_angle, glm::vec3 p_axis)
 {
-	setTransform(glm::rotate(_transform, pAngle, pAxis));
+    setTransform(glm::rotate(m_transform, p_angle, p_axis));
 }
 
 //all game objects are updated in a backward loop, first the behaviour is updated, then all children are updated
-void GameObject::update(float pStep)
+void GameObject::update(float p_step)
 {
-	if (_behaviour) _behaviour->update(pStep);
+    if (m_behaviour) m_behaviour->update(p_step);
 
-    for (int i = _children.size()-1; i >= 0; --i ) {
-        _children[i]->update(pStep);
+    for (int i = static_cast<int>(m_children.size() - 1); i >= 0; --i)
+    {
+        m_children[i]->update(p_step);
     }
 }
 
-int GameObject::getChildCount() {
-    return _children.size();
+int GameObject::getChildCount()
+{
+    return static_cast<int>(m_children.size());
 }
 
-GameObject* GameObject::getChildAt(int pIndex) {
-    return _children[pIndex];
+GameObject* GameObject::getChildAt(int pIndex)
+{
+    return m_children[pIndex];
 }
 

@@ -6,26 +6,29 @@
 
 class DebugHud
 {
-	public:
-		DebugHud( sf::RenderWindow * aWindow );
-		virtual ~DebugHud();
-		void draw();
+private:
+    sf::RenderWindow* m_window;
+    sf::Font    m_font;
+    sf::Text    m_debugText;
+    std::string m_debugInfo;
 
-		void setDebugInfo (std::string pInfo);
+public:
+    
+    DebugHud(sf::RenderWindow* p_window);
 
-	private:
-		sf::RenderWindow * _window;
+    virtual ~DebugHud();
 
-        std::string _debugInfo;
+    void draw();
 
-        sf::Font _font;
-        sf::Text _debugText;
+    void setDebugInfo(std::string p_info);
 
-        void _createDebugHud();
+private:
 
-        DebugHud(const DebugHud&);
-        DebugHud& operator=(const DebugHud&);
+    void createDebugHud();
 
+    DebugHud(const DebugHud&);
+
+    DebugHud& operator=(const DebugHud&);
 };
 
 #endif // DEBUGHUD_H

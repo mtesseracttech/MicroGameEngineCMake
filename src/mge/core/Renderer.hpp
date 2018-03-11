@@ -4,9 +4,13 @@
 #include <glm.hpp>
 
 class World;
+
 class GameObject;
+
 class Camera;
+
 class Mesh;
+
 class AbstractMaterial;
 
 /**
@@ -14,29 +18,49 @@ class AbstractMaterial;
  */
 class Renderer
 {
-	public:
-		Renderer();
-		virtual ~Renderer();
+public:
+    Renderer();
 
-        //utility call
-        void setClearColor (int pR, int pG, int pB);
+    virtual ~Renderer();
 
-        //convenience method to render whole world
-        void render (World* pWorld);
+    //utility call
+    void setClearColor(int pR, int pG, int pB);
 
-        //render specific game object within the world, and optionally all its children
-        void render(GameObject* pGameObject, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive);
+    //convenience method to render whole world
+    void render(World* p_world);
 
-        //renders a specific mesh at the given positions etc with the given material
-        void renderMesh (Mesh* pMesh, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix);
-        void renderChildren (GameObject* pGameObject, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive);
+    //render specific game object within the world, and optionally all its children
+    void render(GameObject* p_gameObject,
+                const glm::mat4& p_modelMatrix,
+                const glm::mat4& p_viewMatrix,
+                const glm::mat4& p_projectionMatrix,
+                bool p_recursive);
 
-        //helper method to render all the children of a gameobject
-        void renderMeshDebugInfo (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix);
+    //renders a specific mesh at the given positions etc with the given material
+    void renderMesh(Mesh* p_mesh,
+                    AbstractMaterial* p_material,
+                    const glm::mat4& p_modelMatrix,
+                    const glm::mat4& p_viewMatrix,
+                    const glm::mat4& p_projectionMatrix);
 
-    private:
-        //helper method to render a single gameobject
-        void renderSelf (GameObject* pGameObject, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix);
+    void renderChildren(GameObject* p_gameObject,
+                        const glm::mat4& p_modelMatrix,
+                        const glm::mat4& p_viewMatrix,
+                        const glm::mat4& p_projectionMatrix,
+                        bool p_recursive);
+
+    //helper method to render all the children of a gameobject
+    void renderMeshDebugInfo(Mesh* p_mesh,
+                             const glm::mat4& p_modelMatrix,
+                             const glm::mat4& p_viewMatrix,
+                             const glm::mat4& p_projectionMatrix);
+
+private:
+    //helper method to render a single gameobject
+    void renderSelf(GameObject* p_gameObject,
+                    const glm::mat4& p_modelMatrix,
+                    const glm::mat4& p_viewMatrix,
+                    const glm::mat4& p_projectionMatrix);
 
 };
 

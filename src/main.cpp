@@ -22,11 +22,19 @@ int main()
 {
     std::cout << "Starting Game" << std::endl;
 
-    AbstractGame* game = new MGEDemo();
-    game->initialize();
-    game->run();
+    AbstractGame* game = nullptr;
+    try
+    {
+        game = new MGEDemo();
+        game->initialize();
+        game->run();
+    }
+    catch (std::runtime_error& err)
+    {
+        std::cout << "An exception was thrown: " << std::endl << err.what() << std::endl;
+    }
 
-	delete game;
+    delete game;
 
     return 0;
 }

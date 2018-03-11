@@ -11,31 +11,48 @@
  */
 class ColorMaterial : public AbstractMaterial
 {
-    public:
-        ColorMaterial(glm::vec3 pColor = glm::vec3(1,0,0));
-        virtual ~ColorMaterial();
+private:
+    /*
+     * Note that they are all PRIVATE, we do not expose this static info to the outside world
+     */
+    static ShaderProgram* m_shader;
 
-        virtual void render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
+    /*
+     * In this example we cache all identifiers for uniforms & attributes
+     * All the static properties are shared between instances of ColorMaterial
+     */
 
-        //in rgb values
-        void setDiffuseColor (glm::vec3 pDiffuseColor);
+    //Uniforms
+    static GLint m_uMvpMatrix;
+    static GLint m_uDiffuseColor;
 
-    private:
-        //all the static properties are shared between instances of ColorMaterial
-        //note that they are all PRIVATE, we do not expose this static info to the outside world
-        static ShaderProgram* _shader;
-        static void _lazyInitializeShader();
+    //Attributes
+    static GLint m_aVertex;
+    static GLint m_aNormal;
+    static GLint m_aUv;
 
-        //in this example we cache all identifiers for uniforms & attributes
-        static GLint _uMVPMatrix;
-        static GLint _uDiffuseColor;
+    /*
+     * The color attribute is unique per instance of color material
+     */
+    glm::vec3 m_diffuseColor;
 
-        static GLint _aVertex ;
-        static GLint _aNormal;
-        static GLint _aUV ;
+public:
+    ColorMaterial(glm::vec3 p_color = glm::vec3(1, 0, 0));
 
-        //this one is unique per instance of color material
-        glm::vec3 _diffuseColor;
+    virtual ~ColorMaterial();
+
+    void render(Mesh* p_mesh,
+                const glm::mat4& p_modelMatrix,
+                const glm::mat4& p_viewMatrix,
+                const glm::mat4& p_projectionMatrix) override;
+
+    //in rgb values
+    void setDiffuseColor(glm::vec3 p_diffuseColor);
+
+private:
+    static void lazyInitializeShader();
+
+
 };
 
 #endif // COLORMATERIAL_H

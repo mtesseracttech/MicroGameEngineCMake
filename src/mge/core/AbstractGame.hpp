@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <GL/glew.h>
 #include <string>
-using namespace std;
 
 class World;
+
 class Renderer;
 
 /**
@@ -20,51 +20,59 @@ class Renderer;
  */
 class AbstractGame
 {
-    public:
+protected:
 
-        AbstractGame();
-        virtual ~AbstractGame();
+    sf::RenderWindow* m_window;   //sfml window to render into
+    Renderer        * m_renderer; //the renderer class to render the world
+    World           * m_world;    //the root game object that represents our scene
+    float m_fps;       //stores the real fps
 
-        //creates a window, initializes glew, a renderer and a world instance
-        virtual void initialize();
-        //run the actual process of updating all objects, rendering them and processing events
-        virtual void run();
+public:
 
-    protected:
+    AbstractGame();
 
-        //methods above delegate behaviour to the methods below so that you can override it in a subclass
+    virtual ~AbstractGame();
 
-        //initialize sfml rendering context
-        virtual void _initializeWindow();
-        //print info about the current driver version etc
-        virtual void _printVersionInfo();
-        //initialize the extension wrangler
-        virtual void _initializeGlew();
-        //create our own custom renderer instance
-        virtual void _initializeRenderer();
-        //initialize a scene root to which we can attach/add objects
-        virtual void _initializeWorld();
+    //creates a window, initializes glew, a renderer and a world instance
+    virtual void initialize();
 
-        //initialize the actual scene, to be done by a subclass
-        virtual void _initializeScene() = 0;
+    //run the actual process of updating all objects, rendering them and processing events
+    virtual void run();
 
-        //call update on all game objects in the display root
-        virtual void _update(float pStep);
-        //render all game objects in the display root
-        virtual void _render();
-        //process any sfml window events (see SystemEventDispatcher/Listener)
-        virtual void _processEvents();
+protected:
 
-		sf::RenderWindow* _window;  //sfml window to render into
-		Renderer* _renderer;        //the renderer class to render the world
-		World* _world;              //the root game object that represents our scene
-		float _fps;                 //stores the real fps
+    //methods above delegate behaviour to the methods below so that you can override it in a subclass
+    //initialize sfml rendering context
+    virtual void initializeWindow();
 
-    private:
-        AbstractGame(const AbstractGame&);
-        AbstractGame& operator=(const AbstractGame&);
+    //print info about the current driver version etc
+    virtual void printVersionInfo();
 
+    //initialize the extension wrangler
+    virtual void initializeGlew();
 
+    //create our own custom renderer instance
+    virtual void initializeRenderer();
+
+    //initialize a scene root to which we can attach/add objects
+    virtual void initializeWorld();
+
+    //initialize the actual scene, to be done by a subclass
+    virtual void initializeScene() = 0;
+
+    //call update on all game objects in the display root
+    virtual void update(float p_step);
+
+    //render all game objects in the display root
+    virtual void render();
+
+    //process any sfml window events (see SystemEventDispatcher/Listener)
+    virtual void processEvents();
+
+private:
+    AbstractGame(const AbstractGame&);
+
+    AbstractGame& operator=(const AbstractGame&);
 };
 
 #endif // ABSTRACTGAME_H

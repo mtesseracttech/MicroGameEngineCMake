@@ -1,33 +1,33 @@
-#ifndef MGEDEMO_H
-#define MGEDEMO_H
+#ifndef MGEDEMO_HPP
+#define MGEDEMO_HPP
 
 #include <mge/core/AbstractGame.hpp>
 
 class DebugHud;
 
-class MGEDemo: public AbstractGame
+class MGEDemo : public AbstractGame
 {
-    //PUBLIC FUNCTIONS
+private:
+    DebugHud* m_hud; //hud display
 
-	public:
-		MGEDemo();
-		virtual ~MGEDemo();
+    void updateHud();
 
-        virtual void initialize();
+    MGEDemo(const MGEDemo&);
 
-	protected:
-        virtual void _initializeScene();
+    MGEDemo& operator=(const MGEDemo&);
 
-	    //override render to render the hud as well.
-	    virtual void _render();
+protected:
+    virtual void initializeScene();
 
-	private:
-		DebugHud* _hud;                   //hud display
+    //override render to render the hud as well.
+    virtual void render();
 
-        void _updateHud();
+public:
+    MGEDemo();
 
-        MGEDemo(const MGEDemo&);
-        MGEDemo& operator=(const MGEDemo&);
+    virtual ~MGEDemo();
+
+    virtual void initialize();
 };
 
-#endif // MGEDEMO_H
+#endif // MGEDEMO_HPP

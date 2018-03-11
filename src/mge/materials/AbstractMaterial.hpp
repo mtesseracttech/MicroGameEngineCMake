@@ -2,7 +2,9 @@
 #define ABSTRACTMATERIAL_H
 
 #include <glm.hpp>
+
 class GameObject;
+
 class Mesh;
 
 /**
@@ -18,14 +20,18 @@ class Mesh;
  */
 class AbstractMaterial
 {
-    public:
-        AbstractMaterial();
-        virtual ~AbstractMaterial();
+public:
+    AbstractMaterial();
 
-        /**
-         * Render the given mesh.
-         */
-        virtual void render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pPerspectiveMatrix) = 0;
+    virtual ~AbstractMaterial();
+
+    /**
+     * Render the given mesh.
+     */
+    virtual void render(Mesh* p_mesh,
+                        const glm::mat4& p_modelMatrix,
+                        const glm::mat4& p_viewMatrix,
+                        const glm::mat4& p_perspectiveMatrix) = 0;
 };
 
 #endif // ABSTRACTMATERIAL_H

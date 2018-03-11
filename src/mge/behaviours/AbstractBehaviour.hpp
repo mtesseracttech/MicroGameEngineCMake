@@ -12,30 +12,32 @@ class GameObject;
  */
 class AbstractBehaviour
 {
-	public:
+protected:
 
-		AbstractBehaviour();
-		virtual ~AbstractBehaviour() = 0;
+    //reference back its owner
+    GameObject* m_owner;
 
-        //we would like to have this private and only accessible by GameObject, but this
-        //doesnt work out for the CompositeBehaviour, we would have to declare both of them
-        //as friends, tying this class to one of its subclasses, so design decision:
-        //this is kept public but should not be used directly.
-        virtual void setOwner (GameObject* pGameObject);
+public:
 
-        //behaviour should be able to update itself every step and MUST be implemented
-		virtual void update(float pStep) = 0;
+    AbstractBehaviour();
 
-    protected:
+    virtual ~AbstractBehaviour() = 0;
 
-	    //reference back its owner
-		GameObject* _owner;
+    //we would like to have this private and only accessible by GameObject, but this
+    //doesnt work out for the CompositeBehaviour, we would have to declare both of them
+    //as friends, tying this class to one of its subclasses, so design decision:
+    //this is kept public but should not be used directly.
+    virtual void setOwner(GameObject* p_gameObject);
 
-    private:
+    //behaviour should be able to update itself every step and MUST be implemented
+    virtual void update(float p_step) = 0;
 
-        //disallow copy and assignment
-        AbstractBehaviour(const AbstractBehaviour&);
-        AbstractBehaviour& operator=(const AbstractBehaviour&);
+private:
+
+    //disallow copy and assignment
+    AbstractBehaviour(const AbstractBehaviour&);
+
+    AbstractBehaviour& operator=(const AbstractBehaviour&);
 
 };
 

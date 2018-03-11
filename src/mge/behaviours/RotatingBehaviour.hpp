@@ -8,11 +8,12 @@
  */
 class RotatingBehaviour : public AbstractBehaviour
 {
-	public:
-		RotatingBehaviour();
-		virtual ~RotatingBehaviour();
+public:
+    RotatingBehaviour();
 
-		virtual void update(float pStep);
+    virtual ~RotatingBehaviour();
+
+    virtual void update(float p_step);
 
 };
 
