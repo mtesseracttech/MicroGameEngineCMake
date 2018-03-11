@@ -7,17 +7,20 @@ class Camera;
 
 class World : public GameObject
 {
-	public:
-        World();
+private:
+    Camera* m_mainCamera;
 
-		void setMainCamera (Camera* pCamera);
-		Camera* getMainCamera();
+public:
+    World();
 
-	private:
-	    Camera* _mainCamera;
+    void setMainCamera(Camera* p_camera);
 
-        World(const World&);
-        World& operator=(const World&);
+    Camera* getMainCamera();
+
+private:
+    World(const World&);
+
+    World& operator=(const World&);
 };
 
 

@@ -2,15 +2,17 @@
 
 using namespace std;
 
-World::World():GameObject("root"), _mainCamera(0)
+World::World() : GameObject("root"), m_mainCamera(nullptr)
 {
-	//ctor
+    //ctor
 }
 
-void World::setMainCamera (Camera* pCamera) {
-    if (pCamera != NULL) _mainCamera = pCamera;
+void World::setMainCamera(Camera* p_camera)
+{
+    if (p_camera != nullptr) m_mainCamera = p_camera;
 }
 
-Camera* World::getMainCamera () {
-    return _mainCamera;
+Camera* World::getMainCamera()
+{
+    return m_mainCamera;
 }

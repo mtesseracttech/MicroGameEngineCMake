@@ -8,17 +8,20 @@
  */
 class LookAt : public AbstractBehaviour
 {
-    public:
-        LookAt (GameObject * pTarget);
-        virtual ~LookAt();
+private:
+    GameObject* m_target;   //what are we looking at?
+public:
+    LookAt(GameObject* p_target);
 
-        virtual void update(float pStep);
+    virtual ~LookAt();
 
-    private:
-        GameObject * _target;   //what are we looking at?
+    virtual void update(float p_step);
 
-        LookAt(const LookAt&);
-        LookAt& operator=(const LookAt&);
+private:
+
+    LookAt(const LookAt&);
+
+    LookAt& operator=(const LookAt&);
 
 };
 

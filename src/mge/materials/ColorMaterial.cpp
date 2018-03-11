@@ -5,36 +5,38 @@
 #include "mge/core/GameObject.hpp"
 #include "mge/core/Mesh.hpp"
 
-ShaderProgram* ColorMaterial::_shader = NULL;
+ShaderProgram* ColorMaterial::m_shader = nullptr;
 
-GLint ColorMaterial::_uMVPMatrix = 0;
-GLint ColorMaterial::_uDiffuseColor = 0;
+GLint ColorMaterial::m_uMvpMatrix    = 0;
+GLint ColorMaterial::m_uDiffuseColor = 0;
 
-GLint ColorMaterial::_aVertex = 0;
-GLint ColorMaterial::_aNormal = 0;
-GLint ColorMaterial::_aUV = 0;
+GLint ColorMaterial::m_aVertex = 0;
+GLint ColorMaterial::m_aNormal = 0;
+GLint ColorMaterial::m_aUv     = 0;
 
-ColorMaterial::ColorMaterial(glm::vec3 pDiffuseColor):_diffuseColor (pDiffuseColor)
+ColorMaterial::ColorMaterial(glm::vec3 p_color) : m_diffuseColor(p_color)
 {
     //every time we create an instance of colormaterial we check if the corresponding shader has already been loaded
-    _lazyInitializeShader();
+    lazyInitializeShader();
 }
 
-void ColorMaterial::_lazyInitializeShader() {
+void ColorMaterial::lazyInitializeShader()
+{
     //this shader contains everything the material can do (it can render something in 3d using a single color)
-    if (!_shader) {
-        _shader = new ShaderProgram();
-        _shader->addShader(GL_VERTEX_SHADER, config::MGE_SHADER_PATH+"color.vs");
-        _shader->addShader(GL_FRAGMENT_SHADER, config::MGE_SHADER_PATH+"color.fs");
-        _shader->finalize();
+    if (!m_shader)
+    {
+        m_shader = new ShaderProgram();
+        m_shader->addShader(GL_VERTEX_SHADER, config::MGE_SHADER_PATH + "color.vs");
+        m_shader->addShader(GL_FRAGMENT_SHADER, config::MGE_SHADER_PATH + "color.fs");
+        m_shader->finalize();
 
         //cache all the uniform and attribute indexes
-        _uMVPMatrix= _shader->getUniformLocation("mvpMatrix");
-        _uDiffuseColor = _shader->getUniformLocation("diffuseColor");
+        m_uMvpMatrix    = m_shader->getUniformLocation("mvpMatrix");
+        m_uDiffuseColor = m_shader->getUniformLocation("diffuseColor");
 
-        _aVertex = _shader->getAttribLocation("vertex");
-        _aNormal = _shader->getAttribLocation("normal");
-        _aUV =     _shader->getAttribLocation("uv");
+        m_aVertex = m_shader->getAttribLocation("vertex");
+        m_aNormal = m_shader->getAttribLocation("normal");
+        m_aUv     = m_shader->getAttribLocation("uv");
     }
 }
 
@@ -43,21 +45,24 @@ ColorMaterial::~ColorMaterial()
     //dtor
 }
 
-void ColorMaterial::setDiffuseColor(glm::vec3 pDiffuseColor) {
-    _diffuseColor = pDiffuseColor;
+void ColorMaterial::setDiffuseColor(glm::vec3 p_diffuseColor)
+{
+    m_diffuseColor = p_diffuseColor;
 }
 
-void ColorMaterial::render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
-    _shader->use();
+void ColorMaterial::render(Mesh* p_mesh, const glm::mat4& p_modelMatrix, const glm::mat4& p_viewMatrix,
+                           const glm::mat4& p_projectionMatrix)
+{
+    m_shader->use();
 
     //pass in a precalculate mvp matrix (see texture material for the opposite)
-    glm::mat4 mvpMatrix = pProjectionMatrix * pViewMatrix * pModelMatrix;
-    glUniformMatrix4fv ( _uMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvpMatrix));
+    glm::mat4 mvpMatrix = p_projectionMatrix * p_viewMatrix * p_modelMatrix;
+    glUniformMatrix4fv(m_uMvpMatrix, 1, GL_FALSE, glm::value_ptr(mvpMatrix));
 
     //set the material color
-    glUniform3fv (_uDiffuseColor, 1, glm::value_ptr(_diffuseColor));
+    glUniform3fv(m_uDiffuseColor, 1, glm::value_ptr(m_diffuseColor));
 
     //now inform mesh of where to stream its data
-    pMesh->streamToOpenGL(_aVertex, _aNormal, _aUV);
+    p_mesh->streamToOpenGL(m_aVertex, m_aNormal, m_aUv);
 
 }

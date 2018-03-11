@@ -11,23 +11,28 @@
  */
 class TextureMaterial : public AbstractMaterial
 {
-    public:
-        TextureMaterial (Texture* pDiffuseTexture);
-        virtual ~TextureMaterial ();
+private:
+    static ShaderProgram* m_shader;
+    Texture             * m_diffuseTexture;
 
-        virtual void render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
+public:
+    TextureMaterial(Texture* p_diffuseTexture);
 
-        void setDiffuseTexture (Texture* pDiffuseTexture);
+    virtual ~TextureMaterial();
 
-    protected:
-    private:
-        static ShaderProgram* _shader;
-        static void _lazyInitializeShader();
+    void render(Mesh* p_mesh,
+                const glm::mat4& p_modelMatrix,
+                const glm::mat4& p_viewMatrix,
+                const glm::mat4& p_projectionMatrix) override;
 
-        Texture* _diffuseTexture;
+    void setDiffuseTexture(Texture* p_diffuseTexture);
 
-        TextureMaterial(const TextureMaterial&);
-        TextureMaterial& operator=(const TextureMaterial&);
+private:
+    TextureMaterial(const TextureMaterial&);
+
+    TextureMaterial& operator=(const TextureMaterial&);
+
+    static void lazyInitializeShader();
 
 };
 

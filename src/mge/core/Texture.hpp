@@ -7,23 +7,24 @@
 
 class Texture
 {
-	public:
-		static Texture* load(const std::string pTexturePath);
+protected:
+    //OpenGL id for texture buffer
+    GLuint m_id;
 
-		virtual ~Texture();
+    //all previously loaded meshes;
+    static std::map<std::string, Texture*> m_textures;
 
-		GLuint getId();
+public:
+    static Texture* load(std::string p_texturePath);
 
-	protected:
+    virtual ~Texture();
 
-		//all previously loaded meshes;
-		static std::map<std::string, Texture*> _textures;
-        static Texture* _loadFromFile(const std::string pTexturePath);
+    GLuint getId();
 
-	    //OpenGL id for texture buffer
-		GLuint _id;
+protected:
+    static Texture* loadFromFile(std::string p_texturePath);
 
-		Texture();
+    Texture();
 
 };
 

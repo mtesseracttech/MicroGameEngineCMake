@@ -9,14 +9,16 @@
  */
 class KeysBehaviour : public AbstractBehaviour
 {
-	public:
-		KeysBehaviour(float pMoveSpeed = 5, float pTurnSpeed = 45);
-		virtual ~KeysBehaviour();
-		virtual void update( float pStep );
+private:
+    float m_moveSpeed;
+    float m_turnSpeed;
 
-    private:
-        float _moveSpeed;
-        float _turnSpeed;
+public:
+    KeysBehaviour(float p_moveSpeed = 5, float p_turnSpeed = 45);
+
+    virtual ~KeysBehaviour();
+
+    virtual void update(float p_step);
 };
 
 #endif // KEYSBEHAVIOUR_H

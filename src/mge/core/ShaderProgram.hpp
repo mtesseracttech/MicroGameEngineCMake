@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-using namespace std;
+
 #include <GL/glew.h>
 
 /**
@@ -18,29 +18,35 @@ using namespace std;
  */
 class ShaderProgram
 {
-    public:
-		ShaderProgram();
-		virtual ~ShaderProgram();
+private:
+    GLint               m_programId;
+    std::vector<GLuint> p_shaderIds;
 
-        //add a specific shader
-		void addShader(GLuint pShaderType, const string& pShaderPath);
-		//link and compile all added shaders
-		void finalize();
-		//tell opengl this is now the current shader
-		void use();
+public:
+    ShaderProgram();
 
-        //get access to uniforms of the shader
-		GLuint getUniformLocation (const string& pName);
-		//get access to attributes of the shader
-		GLuint getAttribLocation (const string& pName);
+    virtual ~ShaderProgram();
 
-	private:
-	    GLint _programId;
+    //add a specific shader
+    void addShader(GLuint p_shaderType, const std::string& p_shaderPath);
 
-	    vector<GLuint> _shaderIds;
+    //link and compile all added shaders
+    void finalize();
 
-		string _readFile(const string &pShaderPath);
-		GLuint _compileShader (GLuint pShaderType, const string &pShaderSource);
+    //tell opengl this is now the current shader
+    void use();
+
+    //get access to uniforms of the shader
+    GLuint getUniformLocation(const std::string& p_name);
+
+    //get access to attributes of the shader
+    GLuint getAttribLocation(const std::string& p_name);
+
+private:
+
+    std::string readFile(const std::string& p_shaderPath);
+
+    GLuint compileShader(GLuint p_shaderType, const std::string& p_shaderSource);
 };
 
 #endif // SHADERPROGRAM_H

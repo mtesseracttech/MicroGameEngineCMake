@@ -1,20 +1,22 @@
 #include <iostream>
+
 using namespace std;
 
 #include <glm.hpp>
 #include "mge/core/Camera.hpp"
 
-Camera::Camera( std::string pName, glm::vec3 pPosition, glm::mat4 pProjectionMatrix )
-:	GameObject(pName, pPosition), _projection(pProjectionMatrix)
+Camera::Camera(std::string p_name, glm::vec3 p_position, glm::mat4 p_projection)
+        : GameObject(p_name, p_position), m_projection(p_projection)
 {
 }
 
 Camera::~Camera()
 {
-	//dtor
+    //dtor
 }
 
-glm::mat4& Camera::getProjection() {
-    return _projection;
+glm::mat4& Camera::getProjection()
+{
+    return m_projection;
 }
 

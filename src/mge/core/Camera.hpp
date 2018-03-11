@@ -11,20 +11,18 @@
  */
 class Camera : public GameObject
 {
-	public:
-		Camera(
-            std::string pName = "camera",
-            glm::vec3 pPosition = glm::vec3( 0.0f, 3.0f, 5.0f ),
-            glm::mat4 pProjectionMatrix = glm::perspective (glm::radians(60.0f), 4.0f/3.0f, 0.1f, 1000.0f  )
-        );
+private:
+    glm::mat4 m_projection;
+public:
+    Camera(
+            std::string p_name = "camera",
+            glm::vec3 p_position = glm::vec3(0.0f, 3.0f, 5.0f),
+            glm::mat4 p_projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f)
+    );
 
-		virtual ~Camera();
+    virtual ~Camera();
 
-        glm::mat4& getProjection();
-
-	private:
-		glm::mat4 _projection;
-
+    glm::mat4& getProjection();
 };
 
 #endif // CAMERA_H
